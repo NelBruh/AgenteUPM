@@ -1,6 +1,7 @@
 package es.upm;
 
 public class Agente extends jade.core.Agent {
+    @Override
     protected void setup(){
         System.out.println("ejemplo");
     }
