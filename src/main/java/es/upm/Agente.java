@@ -1,12 +1,9 @@
 package es.upm;
 
-public class Agente extends jade.core.Agent {
-    @Override
-    protected void setup(){
-        System.out.println("ejemplo");
-    }
 
-    public static void main(String[] args){
-        System.out.println("hola");
-    }
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
+
+public class Agente extends jade.core.Agent {
+
 }
