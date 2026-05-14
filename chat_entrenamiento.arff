@@ -1,0 +1,28 @@
+@relation chat_moderacion
+
+@attribute texto string
+@attribute clase {Limpio, Toxico}
+
+@data
+"hola a todos que buen directo", Limpio
+"buenas tardes cuanto va a durar el stream", Limpio
+"buenas tardes cuanto va a durar el stream de hoy", Limpio
+"esto es una basura eres el peor idiota", Toxico
+"no le hagas caso a los haters eres un crack", Limpio
+"gana dinero rapido entrando en www estafasegura com", Toxico
+"jajaja que buena jugada", Limpio
+"que contenido tan aburrido me voy", Toxico
+"respetar las normas del chat", Limpio
+"consigue seguidores gratis en http", Toxico
+"eres un idiota ojala te baneen", Toxico
+"eres un idiota no sabes ni jugar ojala te baneen pronto", Toxico
+"saludos desde argentina excelente explicacion", Limpio
+"invierte en mi nueva moneda dinero facil www", Toxico
+"que maravilla de clase asi da gusto", Limpio
+"ojala te mueras y te borren el canal", Toxico
+"que paciencia tienes que tener a veces con alguna gente", Limpio
+"que configuracion de teclado usas yo no me acostumbro", Limpio
+"vas a subir este video a youtube luego para poder repasarlo", Limpio
+"que contenido tan aburrido me voy a otro canal porque este es el peor", Toxico
+"este canal es el peor de todos me voy", Toxico
+"que directo tan aburrido", Toxico
