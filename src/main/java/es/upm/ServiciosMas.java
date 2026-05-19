@@ -1,0 +1,17 @@
+package es.upm;
+
+/**
+ * Tipos de servicio registrados y consultados en el Directory Facilitator (DF) de JADE.
+ */
+public final class ServiciosMas {
+
+    /** Percepción desde fichero de texto (chat simulado). */
+    public static final String PERCEPTOR_FICHERO = "perceptor-chat-fichero";
+    /** Percepción mediante entrada manual del usuario. */
+    public static final String PERCEPTOR_TECLADO = "perceptor-chat-teclado";
+    public static final String MODERADOR = "moderador-toxicidad";
+    public static final String VISUALIZADOR = "visualizador-chat";
+
+    private ServiciosMas() {
+    }
+}
