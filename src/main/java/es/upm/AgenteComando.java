@@ -22,10 +22,10 @@ public class AgenteComando extends Agent {
         System.out.println("[COMANDO] Agente activo: " + getLocalName());
 
         comandos = new HashMap<>();
-        comandos.put("!discord",       "Bot: Únete al Discord del canal → https://discord.gg/ejemplo");
+        comandos.put("!discord", "Bot: Únete al Discord del canal → https://discord.gg/ejemplo");
         comandos.put("!redessociales", "Bot: Twitter @canal | Instagram @canal | YouTube @canal");
-        comandos.put("!horario",       "Bot: Streams en directo → Lunes, Miércoles y Viernes a las 19:00h");
-        comandos.put("!ayuda",         "Bot: Comandos disponibles → !discord | !redessociales | !horario");
+        comandos.put("!horario", "Bot: Streams en directo → Lunes, Miércoles y Viernes a las 19:00h");
+        comandos.put("!ayuda", "Bot: Comandos disponibles → !discord | !redessociales | !horario");
 
         try {
             DfHelper.registrar(this, SERVICIO, "Bot-Comandos-Chat");
