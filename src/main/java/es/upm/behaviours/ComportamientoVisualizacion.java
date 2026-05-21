@@ -30,18 +30,4 @@ public class ComportamientoVisualizacion extends CyclicBehaviour {
         String linea = mensaje.getContent();
         SServer.broadcast(linea);
     }
-
-/*
-    @Override
-    public void action() {
-        ACLMessage mensaje = myAgent.blockingReceive(plantillaInforme);
-        String linea = mensaje.getContent();
-
-        SwingUtilities.invokeLater(() -> {
-            areaChat.append(linea + "\n");
-            areaChat.append("---------------------------------------------------\n");
-            areaChat.setCaretPosition(areaChat.getDocument().getLength());
-        });
-    }
- */
 }

@@ -22,7 +22,15 @@
         const [usuario, mensaje] = e.data.split(":", 2);
         const div = document.createElement("div");
         div.className = "msg";
-        div.innerHTML = `<span class="user" style="color:${colorAleatorio()}">${usuario}:</span>${mensaje}`;
+        const bloqueado = mensaje.includes("MENSAJE BLOQUEADO");
+        estiloMensaje = bloqueado ? "color: gray; font-style: italic;" : `color: ${colorAleatorio()}`;
+        console.log("mensaje chars:", JSON.stringify(mensaje));
+        console.log("bloqueado:", bloqueado);
+        if (bloqueado) {
+            div.innerHTML = `<span class="user" style="${estiloMensaje}>"${usuario}:</span><span style="color: gray; font-style: italic;">${mensaje}</span>`;
+        } else {
+            div.innerHTML = `<span class="user" style="${estiloMensaje}">${usuario}:</span>${mensaje}`;
+        }
         chat.prepend(div);
     };
 </script>
