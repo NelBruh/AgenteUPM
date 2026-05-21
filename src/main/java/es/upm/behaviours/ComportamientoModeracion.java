@@ -39,11 +39,13 @@ public class ComportamientoModeracion extends CyclicBehaviour {
                 ? usuario + ": [MENSAJE BLOQUEADO POR LA IA — clase " + resultado.clasePredicha() + "]"
                 : usuario + ": " + texto;
 
-        ACLMessage respuesta = peticion.createReply();
-        respuesta.setPerformative(ACLMessage.INFORM);
-        respuesta.setContent("Clasificación: " + resultado.clasePredicha() + " | confianza=" + resultado.confianza());
-        myAgent.send(respuesta);
+        String respuesta = "Clasificación: " + resultado.clasePredicha() + " | confianza=" + resultado.confianza();
+//        ACLMessage respuesta = peticion.createReply();
+//        respuesta.setPerformative(ACLMessage.INFORM);
+//        respuesta.setContent("Clasificación: " + resultado.clasePredicha() + " | confianza=" + resultado.confianza());
+//        myAgent.send(respuesta);
 
+        enviarAlPerceptor(respuesta);
         enviarAlVisualizador(lineaVisualizador);
     }
 
@@ -61,6 +63,24 @@ public class ComportamientoModeracion extends CyclicBehaviour {
             myAgent.send(informe);
         } catch (Exception e) {
             System.err.println("[MODERADOR] Error al localizar el visualizador en el DF.");
+            e.printStackTrace();
+        }
+    }
+    
+    private void enviarAlPerceptor(String contenido) {
+        try {
+            var resultados = DfHelper.buscar(myAgent, ServiciosMas.PERCEPTOR_FICHERO);
+            if (resultados.length == 0) {
+                System.err.println("[MODERADOR] No hay perceptor registrado en el DF.");
+                return;
+            }
+            ACLMessage informe = new ACLMessage(ACLMessage.INFORM);
+            informe.addReceiver(resultados[0].getName());
+            informe.setConversationId(EnvioModerador.CONVERSACION);
+            informe.setContent(contenido);
+            myAgent.send(informe);
+        } catch (Exception e) {
+            System.err.println("[MODERADOR] Error al localizar el perceptor en el DF.");
             e.printStackTrace();
         }
     }

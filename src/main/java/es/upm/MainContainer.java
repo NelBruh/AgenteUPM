@@ -21,7 +21,8 @@ public class MainContainer {
                 "perceptor:es.upm.AgentePerceptor",
                 "teclado:es.upm.AgentePerceptorTeclado",
                 "moderador:es.upm.AgenteInteligente",
-                "visualizador:es.upm.AgenteVisualizador");
+                "visualizador:es.upm.AgenteVisualizador",
+                "binder:es.upm.AgenteBinder");
 
         Profile perfil = new ProfileImpl();
         perfil.setParameter(Profile.GUI, "true");
