@@ -11,6 +11,10 @@ public final class ServiciosMas {
     public static final String PERCEPTOR_TECLADO = "perceptor-chat-teclado";
     public static final String MODERADOR = "moderador-toxicidad";
     public static final String VISUALIZADOR = "visualizador-chat";
+    /* Gestión mediante agente multiplexador de líneas */
+    public static final String BINDER = "multiplexador-chat-lineas";
+    /* Ejecuciín de comandos mediante agente comandos*/
+    public static final String COMANDOS = "ejecutador-comandos-chat-";
 
     private ServiciosMas() {
     }
