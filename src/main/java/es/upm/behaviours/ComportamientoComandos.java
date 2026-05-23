@@ -1,8 +1,7 @@
 package es.upm.behaviours;
 
 import es.upm.ServiciosMas;
-import es.upm.util.DfHelper;
-import es.upm.util.EnvioModerador;
+import es.upm.util.Enviar;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -24,7 +23,8 @@ public class ComportamientoComandos extends CyclicBehaviour {
     // Así no cogemos mensajes que no son para nosotros
     private final MessageTemplate plantilla = MessageTemplate.and(
             MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
-            MessageTemplate.MatchConversationId(EnvioModerador.CONVERSACION));
+            // CORRECCIÓN ISSUE #7: Usar la constante unificada de comandos
+            MessageTemplate.MatchConversationId(Enviar.CONV_COMANDOS));
 
     public ComportamientoComandos(Agent agente, Map<String, String> comandos) {
         super(agente);
@@ -59,30 +59,13 @@ public class ComportamientoComandos extends CyclicBehaviour {
         String respuesta = comandos.getOrDefault(comando,
                 "Bot: Comando no reconocido. Usa !ayuda para ver los comandos disponibles.");
 
+        // CORRECCIÓN ISSUE #7: Usar la clase genérica en lugar del método local
         // Mandamos al visualizador primero la linea del usuario y luego la respuesta del bot
-        enviarAlVisualizador(usuario + ": " + texto);
-        enviarAlVisualizador(respuesta);
+        Enviar.mensaje(myAgent, ServiciosMas.VISUALIZADOR, ACLMessage.INFORM, Enviar.CONV_VISUALIZADOR, usuario + ": " + texto);
+        Enviar.mensaje(myAgent, ServiciosMas.VISUALIZADOR, ACLMessage.INFORM, Enviar.CONV_VISUALIZADOR, respuesta);
 
         System.out.println("[COMANDO] " + usuario + " usó " + comando + " → " + respuesta);
     }
-
-    private void enviarAlVisualizador(String contenido) {
-        try {
-            // Buscamos a AgenteVisualizador
-            var resultados = DfHelper.buscar(myAgent, ServiciosMas.VISUALIZADOR);
-            if (resultados.length == 0) {
-                System.err.println("[COMANDO] No hay visualizador registrado en el DF.");
-                return;
-            }
-            // Creamos el mensaje INFORM y lo enviamos al visualizador
-            ACLMessage informe = new ACLMessage(ACLMessage.INFORM);
-            informe.addReceiver(resultados[0].getName());
-            informe.setConversationId(EnvioModerador.CONVERSACION);
-            informe.setContent(contenido);
-            myAgent.send(informe);
-        } catch (Exception e) {
-            System.err.println("[COMANDO] Error al localizar el visualizador en el DF.");
-            e.printStackTrace();
-        }
-    }
+    
+    // El método enviarAlVisualizador ha sido eliminado según los requisitos del Issue #7
 }

@@ -1,6 +1,6 @@
 package es.upm.behaviours;
 
-import es.upm.util.EnvioModerador;
+import es.upm.util.Enviar;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -14,7 +14,7 @@ public class ComportamientoRecepcionInforme extends CyclicBehaviour {
     private final MessageTemplate plantillaRespuesta =
             MessageTemplate.and(
                     MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-                    MessageTemplate.MatchConversationId(EnvioModerador.CONVERSACION));
+                    MessageTemplate.MatchConversationId(Enviar.CONV_MODERADOR));
 
     public ComportamientoRecepcionInforme(Agent agente) {
         super(agente);

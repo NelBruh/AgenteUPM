@@ -22,7 +22,8 @@ public class MainContainer {
                 "teclado:es.upm.AgentePerceptorTeclado",
                 "moderador:es.upm.AgenteInteligente",
                 "visualizador:es.upm.AgenteVisualizador",
-                "binder:es.upm.AgenteBinder");
+                "binder:es.upm.AgenteBinder",
+                "botGenerativo:es.upm.AgentePerceptorBot");
 
         Profile perfil = new ProfileImpl();
         perfil.setParameter(Profile.GUI, "true");

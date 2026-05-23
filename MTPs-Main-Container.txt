@@ -1,1 +1,1 @@
-http://jiaxu.localdomain:7778/acc
+http://N-GSTRGH2:7778/acc

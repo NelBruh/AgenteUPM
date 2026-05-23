@@ -1,10 +1,9 @@
 package es.upm.behaviours;
 
 import es.upm.AgentePerceptorTeclado;
-import es.upm.util.EnvioModerador;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
-
+import es.upm.util.Enviar;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -76,24 +75,17 @@ public class ComportamientoEntradaTeclado extends OneShotBehaviour {
 
   private void enviarLinea(String texto, JTextField campo) {
     String linea = texto == null ? "" : texto.trim();
-    if (linea.isEmpty()) {
-      return;
-    }
-    if (!linea.contains(":")) {
-      linea = "Manual:" + linea;
-    }
+    if (linea.isEmpty()) return;
+    if (!linea.contains(":")) linea = "Manual:" + linea;
 
-    boolean enviado = EnvioModerador.enviar(agente, linea);
+    // ISSUE #7: Envío genérico al Binder mediante REQUEST
+    boolean enviado = es.upm.util.Enviar.mensaje(agente, es.upm.ServiciosMas.BINDER, jade.lang.acl.ACLMessage.REQUEST, es.upm.util.Enviar.CONV_BINDER, linea);
+    
     if (enviado) {
       System.out.println("[PERCEPTOR-TECLADO] Enviado → " + linea);
       campo.setText("");
     } else {
-      JOptionPane.showMessageDialog(
-          ventana,
-          "No se encontró el moderador en el DF o el agente no está activo.\n"
-              + "Comprueba que el sistema sigue en ejecución.",
-          "No se pudo enviar",
-          JOptionPane.WARNING_MESSAGE);
+      JOptionPane.showMessageDialog(ventana, "No se encontró el Binder en el DF.", "Error", JOptionPane.WARNING_MESSAGE);
     }
   }
 }

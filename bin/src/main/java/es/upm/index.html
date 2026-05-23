@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { background: #18181b; color: white; font-family: sans-serif; padding: 1rem; }
+        #chat { display: flex; flex-direction: column-reverse; height: 90vh; overflow: hidden; }
+        .msg { padding: 4px 0; font-size: 14px; }
+        .user { font-weight: bold; margin-right: 6px; }
+    </style>
+</head>
+<body>
+<div id="chat"></div>
+<script>
+    const chat = document.getElementById("chat");
+
+    function colorAleatorio() {
+        const colores = ["#ff6b6b", "#a970ff", "#00b5ad", "#f7b731", "#26de81", "#fd9644", "#45aaf2"];
+        return colores[Math.floor(Math.random() * colores.length)];
+    }
+
+    new EventSource("/events").onmessage = (e) => {
+        const [usuario, mensaje] = e.data.split(":", 2);
+        const div = document.createElement("div");
+        div.className = "msg";
+        const bloqueado = mensaje.includes("MENSAJE BLOQUEADO");
+        estiloMensaje = bloqueado ? "color: gray; font-style: italic;" : `color: ${colorAleatorio()}`;
+        console.log("mensaje chars:", JSON.stringify(mensaje));
+        console.log("bloqueado:", bloqueado);
+        if (bloqueado) {
+            div.innerHTML = `<span class="user" style="${estiloMensaje}>"${usuario}:</span><span style="color: gray; font-style: italic;">${mensaje}</span>`;
+        } else {
+            div.innerHTML = `<span class="user" style="${estiloMensaje}">${usuario}:</span>${mensaje}`;
+        }
+        chat.prepend(div);
+    };
+</script>
+</body>
+</html>

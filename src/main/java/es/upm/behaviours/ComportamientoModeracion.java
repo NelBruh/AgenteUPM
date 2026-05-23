@@ -2,23 +2,28 @@ package es.upm.behaviours;
 
 import es.upm.AgenteInteligente;
 import es.upm.ServiciosMas;
-import es.upm.util.DfHelper;
-import es.upm.util.EnvioModerador;
+import es.upm.util.Enviar;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 /**
  * Comportamiento cíclico con filtro de mensajes en modo bloqueante (REQUEST).
+<<<<<<< HEAD
  * Clasifica el texto con Weka y reenvía el resultado al visualizador.
+=======
+ * Clasifica el texto con Weka y reenvía el resultado al visualizador y al perceptor.
+>>>>>>> MiguelD
  */
 public class ComportamientoModeracion extends CyclicBehaviour {
 
     private final AgenteInteligente moderador;
+    
+    // CORRECCIÓN ISSUE #7: Filtrar usando la constante unificada de moderación
     private final MessageTemplate plantillaPeticion =
             MessageTemplate.and(
                     MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
-                    MessageTemplate.MatchConversationId(EnvioModerador.CONVERSACION));
+                    MessageTemplate.MatchConversationId(Enviar.CONV_MODERADOR));
 
     public ComportamientoModeracion(AgenteInteligente moderador) {
         super(moderador);
@@ -40,48 +45,14 @@ public class ComportamientoModeracion extends CyclicBehaviour {
                 : usuario + ": " + texto;
 
         String respuesta = "Clasificación: " + resultado.clasePredicha() + " | confianza=" + resultado.confianza();
-//        ACLMessage respuesta = peticion.createReply();
-//        respuesta.setPerformative(ACLMessage.INFORM);
-//        respuesta.setContent("Clasificación: " + resultado.clasePredicha() + " | confianza=" + resultado.confianza());
-//        myAgent.send(respuesta);
 
-        enviarAlPerceptor(respuesta);
-        enviarAlVisualizador(lineaVisualizador);
+        // CORRECCIÓN ISSUE #7: Usar la clase genérica Enviar en vez de los métodos privados locales
+        // Mandamos el informe técnico al Perceptor
+        Enviar.mensaje(myAgent, ServiciosMas.PERCEPTOR_FICHERO, ACLMessage.INFORM, Enviar.CONV_MODERADOR, respuesta);
+        
+        // Mandamos el texto final (filtrado o limpio) al Visualizador
+        Enviar.mensaje(myAgent, ServiciosMas.VISUALIZADOR, ACLMessage.INFORM, Enviar.CONV_VISUALIZADOR, lineaVisualizador);
     }
 
-    private void enviarAlVisualizador(String contenido) {
-        try {
-            var resultados = DfHelper.buscar(myAgent, ServiciosMas.VISUALIZADOR);
-            if (resultados.length == 0) {
-                System.err.println("[MODERADOR] No hay visualizador registrado en el DF.");
-                return;
-            }
-            ACLMessage informe = new ACLMessage(ACLMessage.INFORM);
-            informe.addReceiver(resultados[0].getName());
-            informe.setConversationId(EnvioModerador.CONVERSACION);
-            informe.setContent(contenido);
-            myAgent.send(informe);
-        } catch (Exception e) {
-            System.err.println("[MODERADOR] Error al localizar el visualizador en el DF.");
-            e.printStackTrace();
-        }
-    }
-    
-    private void enviarAlPerceptor(String contenido) {
-        try {
-            var resultados = DfHelper.buscar(myAgent, ServiciosMas.PERCEPTOR_FICHERO);
-            if (resultados.length == 0) {
-                System.err.println("[MODERADOR] No hay perceptor registrado en el DF.");
-                return;
-            }
-            ACLMessage informe = new ACLMessage(ACLMessage.INFORM);
-            informe.addReceiver(resultados[0].getName());
-            informe.setConversationId(EnvioModerador.CONVERSACION);
-            informe.setContent(contenido);
-            myAgent.send(informe);
-        } catch (Exception e) {
-            System.err.println("[MODERADOR] Error al localizar el perceptor en el DF.");
-            e.printStackTrace();
-        }
-    }
+    // Los métodos enviarAlVisualizador() y enviarAlPerceptor() han sido eliminados para limpiar el código
 }

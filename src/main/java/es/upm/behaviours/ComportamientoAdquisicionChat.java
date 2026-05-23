@@ -1,6 +1,6 @@
 package es.upm.behaviours;
 
-import es.upm.util.EnvioModerador;
+import es.upm.util.Enviar;
 import es.upm.util.RutasProyecto;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
@@ -35,8 +35,8 @@ public class ComportamientoAdquisicionChat extends TickerBehaviour {
 			stop();
 			return;
 		}
-		if (EnvioModerador.enviar(myAgent, linea)) {										// Si no es el final, se envía la línea al agente
-			System.out.println("[PERCEPTOR-FICHERO] Enviado al moderador: " + linea);		// inteligente
+		if (es.upm.util.Enviar.mensaje(myAgent, es.upm.ServiciosMas.BINDER, jade.lang.acl.ACLMessage.REQUEST, es.upm.util.Enviar.CONV_BINDER, linea)) {
+			System.out.println("[PERCEPTOR-FICHERO] Enviado al Binder: " + linea);
 		}
 	}
 

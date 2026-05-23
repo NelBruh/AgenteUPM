@@ -1,8 +1,6 @@
 package es.upm.behaviours;
 
-import es.upm.util.EnvioBinder;
-import es.upm.util.EnvioComandos;
-import es.upm.util.EnvioModerador;
+import es.upm.util.Enviar;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -14,7 +12,7 @@ public class ComportamientoBinder extends CyclicBehaviour {
 	// Así no cogemos mensajes que no son para nosotros
 	private final MessageTemplate plantilla = MessageTemplate.and(
 			MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
-			MessageTemplate.MatchConversationId(EnvioBinder.CONVERSACION));
+			MessageTemplate.MatchConversationId(es.upm.util.Enviar.CONV_BINDER));
 
 	public ComportamientoBinder(Agent agente) {
 		super(agente);
@@ -28,11 +26,11 @@ public class ComportamientoBinder extends CyclicBehaviour {
 		
 		// Codificación con if-else, se puede cambiar a futuro a switch-case para añadir multiplexación a otros agentes
 		if(esComando(contenido)) {
-			if(EnvioComandos.enviar(myAgent, contenido))
-				System.out.println("[BINDER] Envió mensaje " + contenido + " al Agente Comandos");
+			if(es.upm.util.Enviar.mensaje(myAgent, es.upm.ServiciosMas.COMANDOS, ACLMessage.REQUEST, es.upm.util.Enviar.CONV_COMANDOS, contenido))
+				System.out.println("[BINDER] Envió comando al Agente Comandos");
 		}
 		else {
-			if(EnvioModerador.enviar(myAgent, contenido))
+			if(es.upm.util.Enviar.mensaje(myAgent, es.upm.ServiciosMas.MODERADOR, ACLMessage.REQUEST, es.upm.util.Enviar.CONV_MODERADOR, contenido))
 				System.out.println("[BINDER] Enviado al moderador: "+ contenido);
 		}
 	}
