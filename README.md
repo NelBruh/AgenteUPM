@@ -73,7 +73,8 @@ flowchart TB
 2. En la ventana **Entrada manual — Perceptor teclado**, escribir:
    - Limpio: `Profesor: Buen trabajo con el sistema multiagente`
    - Tóxico: `Troll: Eres un idiota esto es basura`
-3. Comprobar en la ventana del chat si el mensaje pasa o se bloquea.
+3. Abrir en el navegador http://localhost:8080/ para visualizar los mensajes
+
 
 Documentación ampliada: [`docs/MEMORIA.md`](docs/MEMORIA.md).
 
