@@ -30,40 +30,7 @@ Completar en [`docs/GRUPO.md`](docs/GRUPO.md) antes de la entrega en el Aula Vir
 
 ## Arquitectura
 
-```mermaid
-flowchart TB
-    subgraph externo [Fuentes externas]
-        CHAT[(chat.txt)]
-        USER[Usuario teclado]
-        ARFF[(chat_entrenamiento.arff)]
-    end
-
-    subgraph jade [Plataforma JADE]
-        DF[(Directory Facilitator)]
-        PF[AgentePerceptor fichero]
-        PT[AgentePerceptorTeclado]
-        M[AgenteInteligente]
-        V[AgenteVisualizador]
-    end
-
-    UI[Ventana chat]
-    IN[Entrada manual]
-
-    CHAT --> PF
-    USER --> PT
-    ARFF --> M
-    PF -->|ACL REQUEST| M
-    PT -->|ACL REQUEST| M
-    M -->|ACL INFORM| PF
-    M -->|ACL INFORM| PT
-    M -->|ACL INFORM resultado| V
-    PF -.DF.-> DF
-    PT -.DF.-> DF
-    M -.DF.-> DF
-    V -.DF.-> DF
-    V --> UI
-    PT --> IN
-```
+En [`docs/Diagrama_Arquitectura.pdf`](docs/Diagrama_Arquitectura.pdf)
 
 **Flujo:** el perceptor de fichero envía una línea cada 4 s; el de teclado envía cuando pulsáis *Enviar*. El moderador clasifica con Weka (dataset ampliado ~55 ejemplos) y el visualizador muestra el chat moderado.
 
