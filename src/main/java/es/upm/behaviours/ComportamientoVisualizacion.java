@@ -11,7 +11,7 @@ import javax.swing.*;
 
 /**
  * Comportamiento cíclico que recibe INFORM del moderador mediante filtro bloqueante
- * y actualiza la interfaz Swing en el hilo de eventos (EDT).
+ * y manda el mensaje por http al servidor local
  */
 public class ComportamientoVisualizacion extends CyclicBehaviour {
 
@@ -24,6 +24,7 @@ public class ComportamientoVisualizacion extends CyclicBehaviour {
         super(agente);
     }
 
+    // manda el mensaje recibido al servidor http
     @Override
     public void action(){
         ACLMessage mensaje = myAgent.blockingReceive(plantillaInforme);
