@@ -22,7 +22,7 @@ public class AgentePerceptorBot extends Agent {
     private static final String OLLAMA_URL = "http://localhost:11434/api/generate";
     
     // El modelo que tengáis descargado (puede ser "llama3", "mistral", "phi3", etc.)
-    private static final String MODELO = "llama3.2"; 
+    private static final String MODELO = "llama3"; 
     
     private HttpClient httpClient;
 

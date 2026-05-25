@@ -9,14 +9,17 @@ import jade.core.Agent;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 /**
- * Agente de visualización: Levanta un servidor local en localhost:8080 para
- * visualizar los mensajes
+ * Agente de visualización: muestra en una interfaz Swing el chat moderado
+ * recibido mediante mensajes ACL INFORM.
  */
 public class AgenteVisualizador extends Agent {
+    static OutputStream client;
     @Override
     protected void setup(){
 
@@ -55,5 +58,16 @@ public class AgenteVisualizador extends Agent {
             e.printStackTrace();
         }
         addBehaviour(new ComportamientoVisualizacion(this));
+    }
+
+    static void broadcast(String texto) {
+        if (client != null) {
+            try {
+                client.write(("data: " + texto + "\n\n").getBytes());
+                client.flush();
+            } catch (IOException e) {
+                client = null;
+            }
+        }
     }
 }

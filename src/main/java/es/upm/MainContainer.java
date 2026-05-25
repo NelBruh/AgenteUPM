@@ -23,7 +23,8 @@ public class MainContainer {
                 "moderador:es.upm.AgenteInteligente",
                 "visualizador:es.upm.AgenteVisualizador",
                 "binder:es.upm.AgenteBinder",
-                "botGenerativo:es.upm.AgentePerceptorBot");
+                "botGenerativo:es.upm.AgentePerceptorBot",
+                "comandos:es.upm.AgenteComando");
 
         Profile perfil = new ProfileImpl();
         perfil.setParameter(Profile.GUI, "true");

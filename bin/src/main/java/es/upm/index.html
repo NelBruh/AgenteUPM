@@ -19,18 +19,33 @@
     }
 
     new EventSource("/events").onmessage = (e) => {
-        const [usuario, mensaje] = e.data.split(":", 2);
+        const textoCompleto = e.data;
+        
+        // Buscamos el primer ':' para separar usuario y mensaje
+        const indice = textoCompleto.indexOf(":");
+        
+        let usuario = textoCompleto;
+        let mensaje = "";
+        
+        if (indice !== -1) {
+            usuario = textoCompleto.substring(0, indice);
+            mensaje = textoCompleto.substring(indice + 1);
+        }
+
         const div = document.createElement("div");
         div.className = "msg";
         const bloqueado = mensaje.includes("MENSAJE BLOQUEADO");
-        estiloMensaje = bloqueado ? "color: gray; font-style: italic;" : `color: ${colorAleatorio()}`;
-        console.log("mensaje chars:", JSON.stringify(mensaje));
-        console.log("bloqueado:", bloqueado);
+        
+        // Guardamos el color/estilo
+        const estiloMensaje = bloqueado ? "color: gray; font-style: italic;" : `color: ${colorAleatorio()}`;
+        
+        // Corregidas las comillas del atributo style
         if (bloqueado) {
-            div.innerHTML = `<span class="user" style="${estiloMensaje}>"${usuario}:</span><span style="color: gray; font-style: italic;">${mensaje}</span>`;
+            div.innerHTML = `<span class="user" style="${estiloMensaje}">${usuario}:</span><span style="color: gray; font-style: italic;">${mensaje}</span>`;
         } else {
             div.innerHTML = `<span class="user" style="${estiloMensaje}">${usuario}:</span>${mensaje}`;
         }
+        
         chat.prepend(div);
     };
 </script>

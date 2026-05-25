@@ -9,11 +9,7 @@ import jade.lang.acl.MessageTemplate;
 
 /**
  * Comportamiento cíclico con filtro de mensajes en modo bloqueante (REQUEST).
-<<<<<<< HEAD
- * Clasifica el texto con Weka y reenvía el resultado al visualizador.
-=======
  * Clasifica el texto con Weka y reenvía el resultado al visualizador y al perceptor.
->>>>>>> MiguelD
  */
 public class ComportamientoModeracion extends CyclicBehaviour {
 

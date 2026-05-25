@@ -13,8 +13,6 @@ import java.util.Map;
  */
 public class AgenteComando extends Agent {
 
-    static final String SERVICIO = "chatbot-comandos";
-
     private Map<String, String> comandos;
 
     @Override
@@ -28,7 +26,8 @@ public class AgenteComando extends Agent {
         comandos.put("!ayuda", "Bot: Comandos disponibles → !discord | !redessociales | !horario");
 
         try {
-            DfHelper.registrar(this, SERVICIO, "Bot-Comandos-Chat");
+            // EL CAMBIO ESTÁ AQUÍ: Usamos la constante oficial ServiciosMas.COMANDOS
+            DfHelper.registrar(this, ServiciosMas.COMANDOS, "Bot-Comandos-Chat");
             System.out.println("[COMANDO] Servicio registrado en el DF.");
         } catch (Exception e) {
             System.err.println("[COMANDO] No se pudo registrar en el DF.");

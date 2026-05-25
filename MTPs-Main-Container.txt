@@ -1,1 +1,1 @@
-http://N-GSTRGH2:7778/acc
+http://N-GSTRGH2.mshome.net:7778/acc
