@@ -30,4 +30,8 @@ _Completar nombres y fecha antes de la entrega._
 
 | Miembro | Firma / conformidad |
 |---------|---------------------|
-|         |                     |
+| Jiaxu He | Firmado por Jiaxu He |
+| Isaak Rojas Castaño | Firmado por Isaak Rojas Castaño |
+| Miguel Martín Trilla | Firmado por Miguel Martín Trilla |
+| Gufeng Wu | Firmado por Gufeng Wu |
+| Miguel Díaz Martín | Firmado por Miguel Díaz Martín |
