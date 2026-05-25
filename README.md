@@ -4,7 +4,7 @@
 **Curso:** 2025-2026  
 **Plataforma:** [JADE](https://jade.tilab.com/) 4.6 + [Weka](https://www.cs.waikato.ac.nz/ml/weka/) 3.8
 
-Sistema multiagente que simula un chat en directo: **dos agentes de percepción** (fichero + teclado) adquieren mensajes, un agente **inteligente** los clasifica como limpios o tóxicos con Weka, y un agente **visualiza** el resultado en Swing. Todos se coordinan mediante el **Directory Facilitator (DF)** y mensajes **ACL**.
+Sistema multiagente que simula un chat en directo: **tres agentes de percepción** (fichero, teclado y bot generativo con Ollama) adquieren mensajes, un agente **binder** los enruta, un agente **inteligente** los clasifica como limpios o tóxicos con Weka, un agente **de comandos** responde a comandos de chat (`!discord`, `!horario`…), y un agente **visualiza** el resultado en Swing. Todos se coordinan mediante el **Directory Facilitator (DF)** y mensajes **ACL**.
 
 ---
 
@@ -18,13 +18,15 @@ Completar en [`docs/GRUPO.md`](docs/GRUPO.md) antes de la entrega en el Aula Vir
 
 | Requisito | Implementación |
 |-----------|----------------|
-| Agente de percepción / adquisición externa | `AgentePerceptor` (fichero) + `AgentePerceptorTeclado` (usuario) — **dos fuentes combinadas** |
+| Agente de percepción / adquisición externa | `AgentePerceptor` (fichero) + `AgentePerceptorTeclado` (usuario) + `AgentePerceptorBot` (LLM Ollama) — **tres fuentes combinadas** |
+| Agente multiplexador / enrutador | `AgenteBinder` — distingue mensajes normales de comandos `!` y los redirige al moderador o al agente de comandos |
 | Agente con procesamiento inteligente | `AgenteInteligente` — Weka J48 + `StringToWordVector` |
+| Agente de comandos de chat | `AgenteComando` — responde a `!discord`, `!horario`, `!redessociales`, `!ayuda` con respuestas predefinidas |
 | Agente con interfaz de usuario | `AgenteVisualizador` — Swing |
-| Comportamientos JADE en cada agente | `ComportamientoAdquisicionChat`, `ComportamientoModeracion`, `ComportamientoVisualizacion` + `OneShotBehaviour` de entrenamiento |
+| Comportamientos JADE en cada agente | `ComportamientoAdquisicionChat`, `ComportamientoBinder`, `ComportamientoComandos`, `ComportamientoModeracion`, `ComportamientoVisualizacion` + `OneShotBehaviour` de entrenamiento |
 | Mensajes ACL | `REQUEST` / `INFORM` entre agentes |
-| Filtro bloqueante | `blockingReceive` + `MessageTemplate` en moderador y visualizador |
-| Directory Facilitator | Registro y consulta en los **cuatro** agentes |
+| Filtro bloqueante | `blockingReceive` + `MessageTemplate` en binder, moderador, agente de comandos y visualizador |
+| Directory Facilitator | Registro y consulta en los **siete** agentes |
 
 ---
 
@@ -32,7 +34,7 @@ Completar en [`docs/GRUPO.md`](docs/GRUPO.md) antes de la entrega en el Aula Vir
 
 En [`docs/Diagrama_Arquitectura.pdf`](docs/Diagrama_Arquitectura.pdf)
 
-**Flujo:** el perceptor de fichero envía una línea cada 4 s; el de teclado envía cuando pulsáis *Enviar*. El moderador clasifica con Weka (dataset ampliado ~55 ejemplos) y el visualizador muestra el chat moderado.
+**Flujo:** los tres perceptores envían mensajes al **Binder**: el de fichero cada 4 s, el de teclado cuando pulsáis *Enviar*, y el bot generativo cada 15 s (consulta a Ollama con el prompt de espectador de Twitch). El Binder examina cada línea: si empieza por `!` la redirige al **AgenteComando**, que devuelve la respuesta al visualizador; en caso contrario la redirige al **moderador**, que clasifica con Weka (dataset ampliado ~55 ejemplos) y el visualizador muestra el chat moderado.
 
 ### Prueba en vivo durante la defensa
 
@@ -112,7 +114,10 @@ Si preferís cargar agentes uno a uno desde la GUI de JADE:
 |--------|--------|
 | perceptor | `es.upm.AgentePerceptor` |
 | teclado | `es.upm.AgentePerceptorTeclado` |
+| bot | `es.upm.AgentePerceptorBot` |
+| binder | `es.upm.AgenteBinder` |
 | moderador | `es.upm.AgenteInteligente` |
+| comandos | `es.upm.AgenteComando` |
 | visualizador | `es.upm.AgenteVisualizador` |
 
 ---
@@ -143,7 +148,10 @@ Podéis editar `chat.txt` para nuevos casos automáticos. Para el teclado, usad 
     ├── MainContainer.java        # Arranque del sistema
     ├── AgentePerceptor.java
     ├── AgentePerceptorTeclado.java
+    ├── AgentePerceptorBot.java   # Perceptor generativo via Ollama (LLM local)
+    ├── AgenteBinder.java         # Multiplexador: enruta mensajes o comandos
     ├── AgenteInteligente.java
+    ├── AgenteComando.java        # Responde a comandos !discord, !horario, etc.
     ├── AgenteVisualizador.java
     ├── ServiciosMas.java
     ├── behaviours/               # Comportamientos JADE
@@ -155,11 +163,14 @@ Podéis editar `chat.txt` para nuevos casos automáticos. Para el teclado, usad 
 
 ## Defensa oral — puntos clave
 
-1. **Cuatro agentes:** dos perceptores (fichero + teclado), moderador Weka, visualizador.
-2. **DF:** cada agente registra un servicio; perceptor y moderador consultan servicios consumidos.
-3. **ACL:** protocolo request-inform; `conversation-id` común `moderacion-chat`.
-4. **Filtros bloqueantes:** moderador (REQUEST) y visualizador (INFORM).
+1. **Siete agentes:** tres perceptores (fichero + teclado + bot Ollama), binder, moderador Weka, agente de comandos, visualizador.
+2. **DF:** cada agente registra un servicio; perceptores, binder, moderador y agente de comandos consultan servicios consumidos.
+3. **ACL:** protocolo request-inform; `conversation-id` diferenciado por canal (`CONV_BINDER`, `CONV_MODERADOR`, `CONV_COMANDOS`, `CONV_VISUALIZADOR`).
+4. **Filtros bloqueantes:** binder, moderador (REQUEST), agente de comandos (REQUEST) y visualizador (INFORM).
 5. **Weka:** pipeline `StringToWordVector` + árbol **J48**; salida con clase y confianza.
+6. **AgenteBinder:** detecta si el contenido comienza con `!` y enruta al agente de comandos; en caso contrario lo pasa al moderador.
+7. **AgentePerceptorBot:** usa la API REST de Ollama (`/api/generate`) con un prompt de espectador de Twitch; genera un mensaje cada 15 s sin dependencias externas de JSON.
+8. **AgenteComando:** mapa estático de comandos (`!discord`, `!horario`, `!redessociales`, `!ayuda`); envía al visualizador la línea del usuario y la respuesta del bot como dos INFORM consecutivos.
 
 ---
 
